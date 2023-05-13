@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>User Avatar Upload</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/cropper.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<style type="text/css">
+			body {
+				font-family: Arial, sans-serif;
+			}
+			.changeAvatar,
+			.cropAvatar_Alert {
+				background: #F5F5F5;
+				width: 99.9%;
+				z-index: 3;
+				position: fixed;
+				bottom: -100%;
+				/* 将初始位置设置为底部之外 */
+				left: 0;
+				transition: bottom 0.5s ease-out;
+				border-top-left-radius: 1.14rem;
+				border-top-right-radius: 1.14rem;
+			}
+			.cropAvatar_Alert {
+				height: 8%;
+				background-color: black;
+				width: 100%;
+			}
+			.cropAvatar_Alert_left {
+				width: 30%;
+				height: 50%;
+				float: left;
+			}
+			.cropAvatar_Alert_right {
+				width: 30%;
+				height: 50%;
+				float: right;
+			}
+			@keyframes slide-in-bottom {
+				from {
+					bottom: -100%;
+				}
+
+				to {
+					bottom: 0;
+				}
+			}
+			form {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 1rem;
+			}
+			input[type="file"] {
+				display: none;
+			}
+			label,
+			button {
+				padding: 10px 15px;
+				font-size: 16px;
+				cursor: pointer;
+				width: 50%;
+				height: 100%;
+				margin: 20px auto;
+				border-radius: 1rem;
+				border: none;
+				background: #E3E3E3;
+				margin-top: 0.5rem;
+				font-family: PingFangSC-Medium;
+				line-height: .48rem;
+				background-image: linear-gradient(90deg, #C6E364 0%, #4EE2D7 100%);
+				color: #fff;
+				text-align: center;
+			}
+			.avatar_preview {}
+			.avatar_preview img {
+				left: 25%;
+				width: 50%;
+				height: 50%;
+				position: relative;
+
+			}
+			.container {
+				width: -webkit-fill-available;
+				height: -webkit-fill-available;
+				overflow: hidden;
+				position: absolute;
+			}
+			img {
+				max-width: 100%;
+			}
+			/* 圆头像 */
+			/* .cropper-view-box,
+			.cropper-face {
+				border-radius: 50%;
+			}
+			/* The css styles for `outline` do not follow `border-radius` on iOS/Safari (#979). */
+			.cropper-view-box {
+				outline: 0;
+				box-shadow: 0 0 0 1px #39f;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div>
+		<div class="cropAvatar">
+			<div class="container">
+				<div>
+					<!-- <img id="image" src="../images/picture.jpg" alt="Picture"> -->
+				</div>
+			</div>
+			<div class="cropAvatar_Alert">
+				<button class="cropAvatar_Alert_left">关闭</button>
+				<button class="cropAvatar_Alert_right">确定</button>
+			</div>
+		</div>
+		<div>
+			<div id="avatar-preview" class="avatar_preview"></div>
+		</div>
+
+		<div class="changeAvatar">
+			<form id="avatar-form" enctype="multipart/form-data">
+				<label>
+					<input type="file" name="avatar" accept="image/*" capture="camera">
+					拍照
+				</label>
+				<label>
+					<input type="file" name="avatar" accept="image/*">
+					从相册选择
+				</label>
+				<button type="button" id="closeChangeAvatar">关闭</button>
+			</form>
+		</div>
+		</div>
+		<script src="js/cropper.js"></script>
+		<script>
+			$(function() {
+				$(".changeAvatar").css("bottom", "0");
+				$("#closeChangeAvatar").on("click", function(e) {
+					e.preventDefault();
+					$(".changeAvatar").css("bottom", "-100%");
+				})
+				$(".cropAvatar_Alert_left").on("click", function(e) {
+					e.preventDefault();
+					$(".cropAvatar_Alert").css("bottom", "-100%");
+				})
+				var url;
+				var imgUrl;
+				$('input[type="file"]').change(function(e) {
+					//关闭弹窗 显示新弹窗
+					e.preventDefault();
+					$(".changeAvatar").css("bottom", "-100%");
+					$(".cropAvatar_Alert").css("bottom", "0");
+					var files = this.files;
+					if (!files || !files.length) {
+						return;
+					}
+					var file = files[0];
+					var reader = new FileReader();
+					reader.onload = function(event) {
+						url = event.target.result;
+						imgUrl = url;
+						var img = new Image();
+						img.src = imgUrl;
+						img.onload = function() {
+							var cropper = new Cropper(this, {
+								aspectRatio: 1,
+								viewMode: 1,
+								ready: function() {
+									croppable = true;
+								},
+							});
+							window.cropper = cropper;
+						};
+						$('.container').html(img);
+					};
+					reader.readAsDataURL(file);
+				});
+				$(".cropAvatar_Alert_right").on("click", function(e) {
+					var result = document.getElementById('avatar-preview');
+					var croppedCanvas;
+					var roundedCanvas;
+					var roundedImage;
+					if (!croppable) {
+						return;
+					}
+					// Crop
+					croppedCanvas = cropper.getCroppedCanvas();
+					// Round截取圆头像
+					/* roundedCanvas = getRoundedCanvas(croppedCanvas); */
+					// Show
+					roundedImage = document.createElement('img');
+					roundedImage.src = croppedCanvas.toDataURL()
+					result.innerHTML = '';
+					result.appendChild(roundedImage);
+				})
+
+				function getRoundedCanvas(sourceCanvas) {
+					var canvas = document.createElement('canvas');
+					var context = canvas.getContext('2d');
+					var width = sourceCanvas.width;
+					var height = sourceCanvas.height;
+					canvas.width = width;
+					canvas.height = height;
+					context.imageSmoothingEnabled = true;
+					context.drawImage(sourceCanvas, 0, 0, width, height);
+					context.globalCompositeOperation = 'destination-in';
+					context.beginPath();
+					context.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI, true);
+					context.fill();
+					return canvas;
+				}
+			});
+		</script>
+	</body>
+
+</html>
