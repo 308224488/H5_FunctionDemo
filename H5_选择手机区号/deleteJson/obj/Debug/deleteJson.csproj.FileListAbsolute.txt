@@ -1,0 +1,11 @@
+C:\Users\cailuoxiong\Desktop\deleteJson\bin\Debug\deleteJson.exe.config
+C:\Users\cailuoxiong\Desktop\deleteJson\bin\Debug\deleteJson.exe
+C:\Users\cailuoxiong\Desktop\deleteJson\bin\Debug\deleteJson.pdb
+C:\Users\cailuoxiong\Desktop\deleteJson\bin\Debug\Newtonsoft.Json.dll
+C:\Users\cailuoxiong\Desktop\deleteJson\bin\Debug\Newtonsoft.Json.xml
+C:\Users\cailuoxiong\Desktop\deleteJson\obj\Debug\deleteJson.csproj.AssemblyReference.cache
+C:\Users\cailuoxiong\Desktop\deleteJson\obj\Debug\deleteJson.csproj.SuggestedBindingRedirects.cache
+C:\Users\cailuoxiong\Desktop\deleteJson\obj\Debug\deleteJson.csproj.CoreCompileInputs.cache
+C:\Users\cailuoxiong\Desktop\deleteJson\obj\Debug\deleteJson.csproj.CopyComplete
+C:\Users\cailuoxiong\Desktop\deleteJson\obj\Debug\deleteJson.exe
+C:\Users\cailuoxiong\Desktop\deleteJson\obj\Debug\deleteJson.pdb
