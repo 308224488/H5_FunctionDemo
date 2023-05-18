@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Compressor.js Demo</title>
+</head>
+<body>
+
+  <h1>Compressor.js Demo</h1>
+
+  <input type="file" id="image-input" multiple>
+
+  <div id="results"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.0.5/compressor.min.js"></script>
+  <script>
+    // 获取DOM元素
+    var imageInput = document.getElementById('image-input');
+    var resultsDiv = document.getElementById('results');
+
+    // 监听文件选择事件
+    imageInput.addEventListener('change', function(e){
+      var files = e.target.files; // 获取选中的文件列表
+
+      // 迭代文件列表
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var imageType = /image.*/;
+
+        // 只处理图像文件
+        if (!file.type.match(imageType)) {
+          continue;
+        }
+
+        // 创建一个img元素用于预览原始图像
+        var originalImage = document.createElement('img');
+        originalImage.src = URL.createObjectURL(file);
+        resultsDiv.appendChild(originalImage);
+
+        // 压缩图像
+        new Compressor(file, {
+          quality: 0.8,
+          maxWidth: 720,
+          maxHeight: 720,
+          success: function(result) {
+            // 创建一个img元素用于显示压缩后的图像
+            var compressedImage = document.createElement('img');
+            compressedImage.src = URL.createObjectURL(result);
+            resultsDiv.appendChild(compressedImage);
+          }
+        });
+      }
+    });
+
+  </script>
+
+</body>
+</html>
